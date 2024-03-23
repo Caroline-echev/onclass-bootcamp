@@ -23,7 +23,7 @@ public class TechnologyUseCase implements ITechnologyServicePort {
     @Override
     public Technology addTechnology(Technology technology) {
 
-        if(!isUniqueName(technology)){
+        if(isUniqueName(technology)){
             throw new NotUniqueNameException("The name of the technology already exists");
         }
 
@@ -33,19 +33,15 @@ public class TechnologyUseCase implements ITechnologyServicePort {
 
     @Override
     public Optional<Technology> getTechnologyByName(String name) {
-
-        if (technologyPersistencePort.getTechnologyByName(name) == null) {
+        Optional<Technology> technologyOptional = technologyPersistencePort.getTechnologyByName(name);
+        if (technologyOptional.isEmpty()) {
             throw new NoDataFoundException(name);
         }
-        return technologyPersistencePort.getTechnologyByName(name);
+        return technologyOptional;
     }
 
 
-    private  boolean isUniqueName(Technology technology){
-
-        if (technologyPersistencePort.getTechnologyByName(technology.getName()) == null){
-            return false;
-        }
-        return true;
+    private boolean isUniqueName(Technology technology) {
+        return technologyPersistencePort.getTechnologyByName(technology.getName()).isPresent();
     }
 }
