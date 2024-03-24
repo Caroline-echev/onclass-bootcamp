@@ -9,6 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -93,7 +96,37 @@ class TechnologyUseCaseTest {
 
 
     }
+    @Test
+    @DisplayName("Expected list of Technologies to be returned")
+    void shouldGetAllTechnologies() {
 
+        // GIVEN
+        List<Technology> technologies = new ArrayList<>();
+        technologies.add(new Technology(1L, "Java", "Programming language"));
+        technologies.add(new Technology(2L, "Python", "Scripting language"));
+        technologies.add(new Technology(3L, "JavaScript", "Programming language"));
 
+        //WHEN
+        when(technologyPersistencePort.getAllTechnologies(anyInt(), anyInt(), anyBoolean()))
+                        .thenReturn(technologies);
+        List<Technology> actualTechnologies = technologyUseCase.getAllTechnologies(0, 10, true);
 
+        // THEN
+        assertEquals(technologies.size(), actualTechnologies.size());
+    }
+
+    @Test
+    @DisplayName("Expected empty list of Technologies to be returned")
+    void shouldGetEmptyTechnologies() {
+        // GIVEN
+        List<Technology> emptyList = new ArrayList<>();
+
+        // WHEN
+        when(technologyPersistencePort.getAllTechnologies(anyInt(), anyInt(), anyBoolean()))
+                .thenReturn(emptyList);
+        List<Technology> actualTechnologies = technologyUseCase.getAllTechnologies(0, 10, true);
+
+        // THEN
+        assertTrue(actualTechnologies.isEmpty(), "Expected empty list of Technologies to be returned");
+    }
 }

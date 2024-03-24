@@ -1,6 +1,7 @@
 package com.bootcamp.onclass.adapters.driving.http.controller;
 
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddTechnologyRequest;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.TechnologyResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyResponseMapper;
 import com.bootcamp.onclass.domain.api.ITechnologyServicePort;
@@ -12,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +37,7 @@ class TechnologyRestControllerAdapterTest {
     private TechnologyRestControllerAdapter controller;
 
     @Test
-    void addTechnologyRestTest() {
+    void testAddTechnologyRest() {
 
         // GIVEN
         AddTechnologyRequest request = new AddTechnologyRequest("Python", "Biblioteca para interfaces de usuario dinámicas.");
@@ -51,6 +55,28 @@ class TechnologyRestControllerAdapterTest {
 
         verify(technologyServicePort).addTechnology(newTechnology);
 
-
     }
+    @Test
+    void testGetAllTechnologies() {
+        // GIVEN
+        List<Technology> technologies = new ArrayList<>();
+        technologies.add(new Technology(1L, "Java", "Programming language"));
+        technologies.add(new Technology(2L, "Python", "Scripting language"));
+
+        List<TechnologyResponse> expectedResponse = new ArrayList<>();
+        expectedResponse.add(new TechnologyResponse(1L, "Java", "Programming language"));
+        expectedResponse.add(new TechnologyResponse(2L, "Python", "Scripting language"));
+
+
+
+        // WHEN
+        when(technologyServicePort.getAllTechnologies(0, 10, true)).thenReturn(technologies);
+        when(technologyResponseMapper.toTechnologyResponseList(technologies)).thenReturn(expectedResponse);
+        ResponseEntity<List<TechnologyResponse>> responseEntity = controller.getAllTechnologies(0, 10, true);
+
+        // THEN
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(expectedResponse, responseEntity.getBody());
+    }
+
 }
