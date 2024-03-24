@@ -8,6 +8,7 @@ import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
 
 
+import java.util.List;
 import java.util.Optional;
 
 public class TechnologyUseCase implements ITechnologyServicePort {
@@ -43,5 +44,10 @@ public class TechnologyUseCase implements ITechnologyServicePort {
 
     private boolean isUniqueName(Technology technology) {
         return technologyPersistencePort.getTechnologyByName(technology.getName()).isPresent();
+    }
+    @Override
+    public List<Technology> getAllTechnologies(Integer page, Integer size, boolean orderAsc) {
+        return technologyPersistencePort.getAllTechnologies(page, size, orderAsc);
+
     }
 }

@@ -13,7 +13,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/technology")
@@ -23,7 +26,7 @@ public class TechnologyRestControllerAdapter  {
     private final ITechnologyServicePort technologyServicePort;
 
     private final ITechnologyRequestMapper technologyRequestMapper;
-
+    private final ITechnologyResponseMapper technologyResponseMapper;
 
 
 
@@ -33,6 +36,17 @@ public class TechnologyRestControllerAdapter  {
         Technology newTechnology = technologyServicePort.addTechnology(technologyRequestMapper.addRequestToTechnology(request));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newTechnology);
+    }
+    @GetMapping("/")
+    public ResponseEntity<List<TechnologyResponse>> getAllTechnologies(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "true") boolean orderAsc) {
+
+        List<Technology> technologies = technologyServicePort.getAllTechnologies(page, size, orderAsc);
+        List<TechnologyResponse> response = technologyResponseMapper.toTechnologyResponseList(technologies);
+
+        return ResponseEntity.ok(response);
     }
 
 }
