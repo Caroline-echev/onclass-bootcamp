@@ -4,8 +4,9 @@ package com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.TechnologyEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.ITechnologyEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.ITechnologyRepository;
+import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
-import com.bootcamp.onclass.domain.exception.NotUniqueNameException;
+import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class TechnologyAdapter implements ITechnologyPersistencePort {
     public Technology addTechnology(Technology technology) {
 
         if (technologyRepository.findByName(technology.getName()).isPresent()) {
-            throw new NotUniqueNameException("The name of the technology already exists");
+            throw new ElementAlreadyExistsException(Constants.ELEMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE);
         }
         technologyRepository.save(technologyEntityMapper.toEntity(technology));
 

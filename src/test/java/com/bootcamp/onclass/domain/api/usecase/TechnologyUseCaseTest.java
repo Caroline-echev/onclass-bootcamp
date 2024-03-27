@@ -1,6 +1,6 @@
 package com.bootcamp.onclass.domain.api.usecase;
 
-import com.bootcamp.onclass.domain.exception.NotUniqueNameException;
+import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +54,7 @@ class TechnologyUseCaseTest {
 
         // WHEN
 
-        Throwable exception = assertThrows(NotUniqueNameException.class, () -> {
+        Throwable exception = assertThrows(ElementAlreadyExistsException.class, () -> {
             technologyUseCase.addTechnology(technology);
         });
 

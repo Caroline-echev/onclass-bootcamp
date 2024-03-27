@@ -5,7 +5,7 @@ package com.bootcamp.onclass.configuration.exceptionhandler;
 import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.domain.exception.EmptyFieldException;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
-import com.bootcamp.onclass.domain.exception.NotUniqueNameException;
+import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +27,10 @@ public class ControllerAdvisor {
 
     }
 
-    @ExceptionHandler(NotUniqueNameException.class)
-    public ResponseEntity<ExceptionCodeResponse> handleNotUniqueNameException() {
+    @ExceptionHandler(ElementAlreadyExistsException.class)
+    public ResponseEntity<ExceptionCodeResponse> handleElementAlreadyExistsException() {
 
-        return ResponseEntity.badRequest().body(new ExceptionCodeResponse(Constants.TECHNOLOGY_ALREADY_EXISTS_EXCEPTION_MESSAGE,
+        return ResponseEntity.badRequest().body(new ExceptionCodeResponse(Constants.ELEMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE,
                 HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
 
     }
