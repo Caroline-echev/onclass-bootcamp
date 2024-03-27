@@ -3,6 +3,7 @@ package com.bootcamp.onclass.configuration.exceptionhandler;
 
 
 import com.bootcamp.onclass.configuration.Constants;
+import com.bootcamp.onclass.domain.exception.DuplicateTechnologiesListException;
 import com.bootcamp.onclass.domain.exception.EmptyFieldException;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
@@ -48,6 +49,13 @@ public class ControllerAdvisor {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionCodeResponse(
                 Constants.NO_DATA_FOUND_EXCEPTION_MESSAGE,HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
+
+    }
+    @ExceptionHandler(DuplicateTechnologiesListException.class)
+    public ResponseEntity<ExceptionCodeResponse> handleDuplicateTechnologiesListException() {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionCodeResponse(
+                Constants.DUPLICATE_TECHNOLOGIES_LIST_EXCEPTIN_MESSAGE,HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
 
     }
 

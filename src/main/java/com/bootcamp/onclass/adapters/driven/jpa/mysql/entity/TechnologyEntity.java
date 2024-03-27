@@ -2,6 +2,9 @@ package com.bootcamp.onclass.adapters.driven.jpa.mysql.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "technology")
@@ -19,6 +22,6 @@ public class TechnologyEntity {
     private String name;
     @Column(nullable = false, length = 90)
     private String description;
-
-
+    @ManyToMany(mappedBy = "technologies")
+    private List<CapacityEntity> capacities = new ArrayList<>();
 }
