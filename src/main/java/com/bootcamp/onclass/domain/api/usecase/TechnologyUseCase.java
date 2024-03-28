@@ -1,9 +1,10 @@
 package com.bootcamp.onclass.domain.api.usecase;
 
 
+import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.domain.api.ITechnologyServicePort;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
-import com.bootcamp.onclass.domain.exception.NotUniqueNameException;
+import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
 
@@ -25,7 +26,7 @@ public class TechnologyUseCase implements ITechnologyServicePort {
     public Technology addTechnology(Technology technology) {
 
         if(isUniqueName(technology)){
-            throw new NotUniqueNameException("The name of the technology already exists");
+            throw new ElementAlreadyExistsException(Constants.ELEMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE);
         }
 
         return technologyPersistencePort.addTechnology(technology);

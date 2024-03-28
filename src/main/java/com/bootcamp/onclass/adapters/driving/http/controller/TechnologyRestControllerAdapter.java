@@ -24,20 +24,19 @@ import java.util.List;
 public class TechnologyRestControllerAdapter  {
 
     private final ITechnologyServicePort technologyServicePort;
-
     private final ITechnologyRequestMapper technologyRequestMapper;
     private final ITechnologyResponseMapper technologyResponseMapper;
 
 
 
-    @PostMapping("/")
+        @PostMapping("/addTechnology")
     public ResponseEntity<Technology> addTechnology(@Valid @RequestBody AddTechnologyRequest request) {
 
         Technology newTechnology = technologyServicePort.addTechnology(technologyRequestMapper.addRequestToTechnology(request));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newTechnology);
     }
-    @GetMapping("/")
+    @GetMapping("/getTechnologies")
     public ResponseEntity<List<TechnologyResponse>> getAllTechnologies(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
