@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @Builder
 public class CapacityEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

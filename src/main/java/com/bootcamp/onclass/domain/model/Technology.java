@@ -7,7 +7,7 @@ public class Technology {
     private  Long id;
     private   String name;
     private   String description;
-    private Set<Capacity> capacities;
+
 
 
     public Technology(Long id, String name, String description) {
@@ -29,12 +29,5 @@ public class Technology {
         return description;
     }
 
-    public Set<Capacity> getCapacities() {
-        return capacities;
-    }
-
-    public void setCapacities(Set<Capacity> capacities) {
-        this.capacities = capacities;
-    }
 
 }
