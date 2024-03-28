@@ -1,6 +1,5 @@
 package com.bootcamp.onclass.domain.model;
 
-import java.util.Set;
 
 public class Technology {
 

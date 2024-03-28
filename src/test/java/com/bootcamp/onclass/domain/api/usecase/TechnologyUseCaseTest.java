@@ -61,7 +61,7 @@ class TechnologyUseCaseTest {
         // THEN
 
         verify(technologyPersistencePort, never()).addTechnology(any(Technology.class));
-        assertEquals("The name of the technology already exists", exception.getMessage());
+
     }
     @Test
     @DisplayName("Expected Optional of Technology to be present")

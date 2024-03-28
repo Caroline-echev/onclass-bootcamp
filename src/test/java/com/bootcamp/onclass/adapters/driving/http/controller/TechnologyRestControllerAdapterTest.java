@@ -6,6 +6,7 @@ import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyRequestMappe
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyResponseMapper;
 import com.bootcamp.onclass.domain.api.ITechnologyServicePort;
 import com.bootcamp.onclass.domain.model.Technology;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,6 +38,7 @@ class TechnologyRestControllerAdapterTest {
     private TechnologyRestControllerAdapter controller;
 
     @Test
+    @DisplayName("Test successful adding  of a technology")
     void testAddTechnologyRest() {
 
         // GIVEN
@@ -57,6 +59,7 @@ class TechnologyRestControllerAdapterTest {
 
     }
     @Test
+    @DisplayName("Expected list of Technologies to be returned")
     void testGetAllTechnologies() {
         // GIVEN
         List<Technology> technologies = new ArrayList<>();
