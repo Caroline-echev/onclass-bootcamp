@@ -23,7 +23,11 @@ public class CapacityUseCase implements ICapacityServicePort {
         }
         return capacityPersistencePort.addCapacity(capacity);
     }
+    @Override
+    public List<Capacity> getAllCapacities(Integer page, Integer size, boolean orderAsc , boolean orderName) {
+        return capacityPersistencePort.getAllCapacities(page, size, orderAsc, orderName);
 
+    }
     private boolean validateDuplicateTechnologies(List<Technology> technologies) {
         Set<Long> technologyId = new HashSet<>();
         for (Technology technology : technologies) {
