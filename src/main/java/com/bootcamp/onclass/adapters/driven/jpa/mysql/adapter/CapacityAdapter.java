@@ -39,13 +39,16 @@ public class CapacityAdapter implements ICapacityPersistencePort {
     @Override
     public List<Capacity> getAllCapacities(Integer page, Integer size, boolean orderAsc, boolean orderName) {
         Sort sort;
+        List<CapacityEntity> capacities = null; 
         if (orderName) {
             sort = orderAsc ? Sort.by("name").ascending() : Sort.by("name").descending();
+            Pageable pageable = PageRequest.of(page, size, sort);
+            capacities = capacityRepository.findAll(pageable).getContent();
         } else {
-            sort = orderAsc ? Sort.by("technologies.size").ascending() : Sort.by("technologies.size").descending();
+            Pageable pageable = PageRequest.of(page, size);
+            capacities = orderAsc ? capacityRepository.findAllOrderedByTechnologySizeAsc(pageable).getContent() :
+                    capacityRepository.findAllOrderedByTechnologySizeDesc(pageable).getContent();
         }
-        Pageable pageable = PageRequest.of(page, size, sort);
-        List<CapacityEntity> capacities = capacityRepository.findAll(pageable).getContent();
 
         if (capacities.isEmpty()) {
             throw new NoDataFoundException(Constants.NO_DATA_FOUND_EXCEPTION_MESSAGE);

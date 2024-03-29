@@ -33,9 +33,9 @@ public class CapacityRestControllerAdapter {
     public ResponseEntity<List<CapacityResponse>> getAllCapacities(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "true") boolean isAsc,
-            @RequestParam(defaultValue = "true") boolean orderName) {
-        List<Capacity> capacities = capacityServicePort.getAllCapacities(page, size, isAsc, orderName);
+            @RequestParam(defaultValue = "true") boolean orderAsc,
+            @RequestParam(defaultValue = "false") boolean orderName) {
+        List<Capacity> capacities = capacityServicePort.getAllCapacities(page, size, orderAsc, orderName);
         List<CapacityResponse> response = capacities.stream().map(capacityResponseMapper::modelToFindResponse).toList();
 
         return ResponseEntity.ok().body(response);
