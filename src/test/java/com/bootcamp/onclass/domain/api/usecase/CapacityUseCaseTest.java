@@ -1,11 +1,9 @@
 package com.bootcamp.onclass.domain.api.usecase;
 
-import com.bootcamp.onclass.domain.exception.DuplicateTechnologiesListException;
-import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
+import com.bootcamp.onclass.domain.exception.DuplicateItemsListException;
 import com.bootcamp.onclass.domain.model.Capacity;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ICapacityPersistencePort;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,7 +67,7 @@ class CapacityUseCaseTest {
                 technologies);
         // WHEN
 
-        Throwable exception = assertThrows(DuplicateTechnologiesListException.class, () -> {
+        Throwable exception = assertThrows(DuplicateItemsListException.class, () -> {
             capacityUseCase.addCapacity(capacity);
         });
 

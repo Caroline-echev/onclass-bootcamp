@@ -3,7 +3,7 @@ package com.bootcamp.onclass.domain.api.usecase;
 
 import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.domain.api.ICapacityServicePort;
-import com.bootcamp.onclass.domain.exception.DuplicateTechnologiesListException;
+import com.bootcamp.onclass.domain.exception.DuplicateItemsListException;
 import com.bootcamp.onclass.domain.model.Capacity;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ICapacityPersistencePort;
@@ -19,7 +19,7 @@ public class CapacityUseCase implements ICapacityServicePort {
     @Override
     public Capacity addCapacity(Capacity capacity) {
         if(!validateDuplicateTechnologies(capacity.getTechnologies())){
-            throw new DuplicateTechnologiesListException(Constants.DUPLICATE_TECHNOLOGIES_LIST_EXCEPTIN_MESSAGE);
+            throw new DuplicateItemsListException(Constants.DUPLICATE_ITEMS_LIST_EXCEPTION_MESSAGE);
         }
         return capacityPersistencePort.addCapacity(capacity);
     }
