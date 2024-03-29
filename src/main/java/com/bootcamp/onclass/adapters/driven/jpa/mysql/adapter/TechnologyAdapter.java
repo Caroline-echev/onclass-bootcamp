@@ -47,7 +47,7 @@ public class TechnologyAdapter implements ITechnologyPersistencePort {
 
 
         if (technologies.isEmpty()) {
-            throw new NoDataFoundException("No data was found in the database");
+            throw new NoDataFoundException(Constants.NO_DATA_FOUND_EXCEPTION_MESSAGE);
         }
 
         return technologyEntityMapper.toModelList(technologies);

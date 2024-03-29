@@ -14,4 +14,5 @@ import org.mapstruct.ReportingPolicy;
 public interface ICapacityRequestMapper {
     @Mapping(target = "id", ignore = true)
     Capacity addRequestToCapacity(AddCapacityRequest addCapacityRequest);
+
 }

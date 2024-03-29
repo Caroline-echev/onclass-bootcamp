@@ -11,5 +11,5 @@ public class CapacityResponse {
     private final Long id;
     private final String name;
     private final String description;
-    private final List<Technology> technologies;
+    private final List<TechnologiesCapacityResponse> technologies;
 }
