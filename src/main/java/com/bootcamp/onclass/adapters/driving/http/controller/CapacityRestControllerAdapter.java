@@ -5,7 +5,6 @@ import com.bootcamp.onclass.adapters.driving.http.dto.request.AddCapacityRequest
 import com.bootcamp.onclass.adapters.driving.http.dto.response.CapacityResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ICapacityRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ICapacityResponseMapper;
-import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyResponseMapper;
 import com.bootcamp.onclass.domain.api.ICapacityServicePort;
 import com.bootcamp.onclass.domain.model.Capacity;
 import jakarta.validation.Valid;

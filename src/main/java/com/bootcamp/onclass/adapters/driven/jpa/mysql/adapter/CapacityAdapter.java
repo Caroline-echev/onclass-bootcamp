@@ -1,14 +1,12 @@
 package com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter;
 
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.CapacityEntity;
-import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.TechnologyEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.ICapacityEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.ICapacityRepository;
 import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.model.Capacity;
-import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ICapacityPersistencePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

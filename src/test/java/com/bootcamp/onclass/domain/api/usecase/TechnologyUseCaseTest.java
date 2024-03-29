@@ -102,9 +102,9 @@ class TechnologyUseCaseTest {
 
         // GIVEN
         List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Programming language"));
-        technologies.add(new Technology(2L, "Python", "Scripting language"));
-        technologies.add(new Technology(3L, "JavaScript", "Programming language"));
+        technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
+        technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));
+        technologies.add(new Technology(3L, "Spring Boot", "Framework Java para desarrollo rápido de aplicaciones"));
 
         //WHEN
         when(technologyPersistencePort.getAllTechnologies(anyInt(), anyInt(), anyBoolean()))
