@@ -1,13 +1,12 @@
-package com.bootcamp.onclass.adapters.driving.http.dto.response;
-import com.bootcamp.onclass.domain.model.Technology;
+package com.bootcamp.onclass.adapters.driving.http.dto.response.capacity;
+
+import com.bootcamp.onclass.adapters.driving.http.dto.response.technology.TechnologiesCapacityResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @AllArgsConstructor
-
 @Getter
 public class CapacityResponse {
     private final Long id;

@@ -2,7 +2,7 @@ package com.bootcamp.onclass.adapters.driving.http.controller;
 
 
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddCapacityRequest;
-import com.bootcamp.onclass.adapters.driving.http.dto.response.CapacityResponse;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.capacity.CapacityResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ICapacityRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ICapacityResponseMapper;
 import com.bootcamp.onclass.domain.api.ICapacityServicePort;

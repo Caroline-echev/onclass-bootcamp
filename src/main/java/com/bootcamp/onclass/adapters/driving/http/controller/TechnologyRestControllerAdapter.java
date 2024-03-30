@@ -3,7 +3,7 @@ package com.bootcamp.onclass.adapters.driving.http.controller;
 
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddTechnologyRequest;
 
-import com.bootcamp.onclass.adapters.driving.http.dto.response.TechnologyResponse;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.technology.TechnologyResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyResponseMapper;
 import com.bootcamp.onclass.domain.api.ITechnologyServicePort;
