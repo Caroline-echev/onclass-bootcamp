@@ -32,7 +32,7 @@ class CapacityAdapterTest {
 
     @Test
     void shouldAddCapacity() {
-        // Given
+        // GIVEN
         List<Technology> technologies = new ArrayList<>();
         technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
         technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));
@@ -44,13 +44,13 @@ class CapacityAdapterTest {
                 technologies);
         when(capacityRepository.findByName(any())).thenReturn(Optional.of(new CapacityEntity()));
 
-        // When-Then
+        // WHEN - THEN
         assertThrows(ElementAlreadyExistsException.class, () -> capacityAdapter.addCapacity(capacity));
         verify(capacityRepository, never()).save(any());
     }
     @Test
     void shouldNotAddDuplicateCapacity() {
-        // Given
+        // GIVEN
         List<Technology> technologies = new ArrayList<>();
         technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
         technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));

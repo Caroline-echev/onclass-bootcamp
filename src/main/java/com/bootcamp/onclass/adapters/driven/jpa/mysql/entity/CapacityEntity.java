@@ -1,5 +1,6 @@
 package com.bootcamp.onclass.adapters.driven.jpa.mysql.entity;
 
+import com.bootcamp.onclass.domain.model.Bootcamp;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,5 +32,9 @@ public class CapacityEntity {
             inverseJoinColumns = @JoinColumn(name = "technology_id", referencedColumnName = "id")
     )
     private List<TechnologyEntity> technologies;
+    @ManyToMany(mappedBy = "capacities")
+    private List<BootcampEntity> bootcamps;
 
+    public CapacityEntity(long l, String desarrolladorBackend, String s, Object o) {
+    }
 }

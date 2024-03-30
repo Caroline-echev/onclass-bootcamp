@@ -1,15 +1,21 @@
 package com.bootcamp.onclass.configuration;
 
+import com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter.BootcampAdapter;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter.CapacityAdapter;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter.TechnologyAdapter;
+import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.IBootcampEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.ICapacityEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.ITechnologyEntityMapper;
+import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.IBootcampRepository;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.ICapacityRepository;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.ITechnologyRepository;
+import com.bootcamp.onclass.domain.api.IBootcampServicePort;
 import com.bootcamp.onclass.domain.api.ICapacityServicePort;
 import com.bootcamp.onclass.domain.api.ITechnologyServicePort;
+import com.bootcamp.onclass.domain.api.usecase.BootcampUseCase;
 import com.bootcamp.onclass.domain.api.usecase.CapacityUseCase;
 import com.bootcamp.onclass.domain.api.usecase.TechnologyUseCase;
+import com.bootcamp.onclass.domain.spi.IBootcampPersistencePort;
 import com.bootcamp.onclass.domain.spi.ICapacityPersistencePort;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +33,10 @@ public class BeanConfiguration {
     private final ICapacityRepository capacityRepository;
 
     private final ICapacityEntityMapper capacityEntityMapper;
+
+    private final IBootcampRepository bootcampRepository;
+
+    private final IBootcampEntityMapper bootcampEntityMapper;
 
     @Bean
     public ITechnologyPersistencePort technologyPersistencePort() {
@@ -46,6 +56,14 @@ public class BeanConfiguration {
     @Bean
     public ICapacityServicePort capacityServicePort(){
         return new CapacityUseCase(capacityPersistencePort());
+    }
+    @Bean
+    public IBootcampPersistencePort bootcampPersistencePort(){
+        return new BootcampAdapter(bootcampRepository, bootcampEntityMapper);
+    }
+    @Bean
+    public IBootcampServicePort bootcampServicePort(){
+        return new BootcampUseCase(bootcampPersistencePort());
     }
 
 }
