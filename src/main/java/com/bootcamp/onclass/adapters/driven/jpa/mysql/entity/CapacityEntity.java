@@ -34,4 +34,7 @@ public class CapacityEntity {
     private List<TechnologyEntity> technologies;
     @ManyToMany(mappedBy = "capacities")
     private List<BootcampEntity> bootcamps;
+
+    public CapacityEntity(long l, String desarrolladorBackend, String s, Object o) {
+    }
 }
