@@ -26,6 +26,11 @@ public class BootcampUseCase implements IBootcampServicePort {
         }
         return bootcampPersistencePort.addBootcamp(bootcamp);
     }
+    @Override
+    public List<Bootcamp> getAllBootcamps(Integer page, Integer size, boolean orderAsc , boolean orderName) {
+        return bootcampPersistencePort.getAllBootcamps(page, size, orderAsc, orderName);
+
+    }
     private boolean validateDuplicateCapacities(List<Capacity> capacities) {
         Set<Long> capacityId = new HashSet<>();
         for (Capacity capacity : capacities) {

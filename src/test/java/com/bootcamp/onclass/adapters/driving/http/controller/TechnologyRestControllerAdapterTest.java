@@ -1,7 +1,7 @@
 package com.bootcamp.onclass.adapters.driving.http.controller;
 
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddTechnologyRequest;
-import com.bootcamp.onclass.adapters.driving.http.dto.response.TechnologyResponse;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.technology.TechnologyResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyResponseMapper;
 import com.bootcamp.onclass.domain.api.ITechnologyServicePort;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

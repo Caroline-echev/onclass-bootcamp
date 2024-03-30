@@ -1,7 +1,7 @@
 package com.bootcamp.onclass.adapters.driving.http.mapper;
 
 
-import com.bootcamp.onclass.adapters.driving.http.dto.response.CapacityResponse;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.capacity.CapacityResponse;
 import com.bootcamp.onclass.domain.model.Capacity;
 import org.mapstruct.Mapper;
 
