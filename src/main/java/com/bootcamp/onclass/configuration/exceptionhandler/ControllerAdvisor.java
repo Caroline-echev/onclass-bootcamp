@@ -10,6 +10,7 @@ import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,13 +37,12 @@ public class ControllerAdvisor {
 
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionCodeResponse> handlerArgumentInvalidException(MethodArgumentNotValidException exception) {
-
-        return ResponseEntity.badRequest().body(new ExceptionCodeResponse(exception.getFieldErrors().getFirst().getDefaultMessage(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
-
-    }
+        FieldError firstFieldError = exception.getFieldErrors().get(0);
+        return ResponseEntity.badRequest().body(new ExceptionCodeResponse(firstFieldError.getDefaultMessage(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));}
 
     @ExceptionHandler(NoDataFoundException.class)
     public ResponseEntity<ExceptionCodeResponse> handleNoDataFoundException() {

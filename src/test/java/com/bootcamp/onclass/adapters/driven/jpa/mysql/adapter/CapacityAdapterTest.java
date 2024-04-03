@@ -1,11 +1,16 @@
 package com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter;
 
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.CapacityEntity;
+import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.TechnologyEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.ICapacityEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.ICapacityRepository;
+import com.bootcamp.onclass.data.CapacityData;
+import com.bootcamp.onclass.data.ParametersData;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
+import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.model.Capacity;
 import com.bootcamp.onclass.domain.model.Technology;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,37 +35,29 @@ class CapacityAdapterTest {
     @InjectMocks
     private CapacityAdapter capacityAdapter;
 
+    private CapacityData capacityData = new CapacityData();
+
     @Test
-    void shouldAddCapacity() {
+    @DisplayName("Test adding a capacity with a unique name")
+    void shouldAddCapacityWhenNameIsUnique() {
         // GIVEN
-        List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
-        technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));
-        technologies.add(new Technology(3L, "Spring Boot", "Framework Java para desarrollo rápido de aplicaciones"));
+        Capacity capacity = capacityData.createCapacity();
+        CapacityEntity capacityEntity = capacityData.createCapacityEntity();
+        when(capacityRepository.findByName(capacity.getName())).thenReturn(Optional.empty());
+        when(capacityEntityMapper.toEntity(capacity)).thenReturn(capacityEntity);
+        when(capacityRepository.save(capacityEntity)).thenReturn(capacityEntity);
 
-        Capacity capacity = new Capacity(1L,
-                "Desarrollador Backend",
-                "Diseño y construcción de la lógica y funcionalidades de la parte del servidor de una aplicación",
-                technologies);
-        when(capacityRepository.findByName(any())).thenReturn(Optional.of(new CapacityEntity()));
+        // WHEN
+        Capacity addedCapacity = capacityAdapter.addCapacity(capacity);
 
-        // WHEN - THEN
-        assertThrows(ElementAlreadyExistsException.class, () -> capacityAdapter.addCapacity(capacity));
-        verify(capacityRepository, never()).save(any());
+        // THEN
+        assertEquals(capacity, addedCapacity);
+        verify(capacityRepository).save(capacityEntity);
     }
     @Test
     void shouldNotAddDuplicateCapacity() {
         // GIVEN
-        List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
-        technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));
-        technologies.add(new Technology(3L, "Spring Boot", "Framework Java para desarrollo rápido de aplicaciones"));
-
-        Capacity capacity = new Capacity(1L,
-                "Desarrollador Backend",
-                "Diseño y construcción de la lógica y funcionalidades de la parte del servidor de una aplicación",
-                technologies);
-
+        Capacity capacity =  capacityData.createCapacity();
 
         //WHEN
 
@@ -73,38 +70,128 @@ class CapacityAdapterTest {
     }
 
     @Test
+    @DisplayName("Expected list of capacities to be returned")
     void shouldGetAllCapacities() {
         // GIVEN
 
-        int page = 0;
-        int size = 10;
-        boolean orderAsc = true;
-        boolean orderName = true;
-
-        List<CapacityEntity> capacityEntities = new ArrayList<>();
-        capacityEntities.add(new CapacityEntity(1L, "Desarrollador Backend",
-                "Diseño y construcción de la lógica y funcionalidades de la parte del servidor de una aplicación",
-                null));
-        capacityEntities.add(new CapacityEntity(2L, "Desarrollador Frontend",
-                "Creación de la interfaz de usuario y experiencia de usuario de una aplicación web o móvil",
-                null));
-
-        List<Capacity> expectedCapacities = new ArrayList<>();
-
-        Page<CapacityEntity> pageOfCapacityEntities = new PageImpl<>(capacityEntities);
-
+        List<Capacity> capacities = capacityData.createCapacities();
+        List<CapacityEntity> capacityEntities = capacityData.createCapacityEntities();
 
         // WHEN
 
-        when(capacityRepository.findAll(any(PageRequest.class))).thenReturn(pageOfCapacityEntities);
-        when(capacityEntityMapper.toModelList(capacityEntities)).thenReturn(expectedCapacities);
-        List<Capacity> result = capacityAdapter.getAllCapacities(page, size, orderAsc, orderName);
+        when(capacityRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(capacityEntities));
+        when(capacityEntityMapper.toModelList(capacityEntities)).thenReturn(capacities);
+        List<Capacity> result = capacityAdapter
+                .getAllCapacities(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
 
         // THEN
 
-        assertEquals(expectedCapacities, result);
-        verify(capacityRepository).findAll(any(PageRequest.class));
-        verify(capacityEntityMapper).toModelList(capacityEntities);
+        assertFalse(result.isEmpty());
+        assertEquals(capacities, result);
     }
 
+    @Test
+    @DisplayName("Expected empty list of capacities to be returned")
+    void shouldGetEmptyCapacities(){
+        // GIVEN
+
+        when(capacityRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
+
+        // WHEN - THEN
+        assertThrows(NoDataFoundException.class, () -> capacityAdapter
+                .getAllCapacities(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME));
+    }
+    @Test
+    @DisplayName("Test getting all capacities sorted ascending by name")
+    void shouldGetAllCapacitiesSortedAscendingByName() {
+        // GIVEN
+
+        List<Capacity> capacities = capacityData.createCapacities();
+
+        Sort sort = Sort.by(ParametersData.NAME).ascending();
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
+
+        List<CapacityEntity> capacityEntities = capacityData.createCapacityEntities();
+
+        // WHEN
+
+        when(capacityRepository.findAll(pageable)).thenReturn(new PageImpl<>(capacityEntities));
+        when(capacityEntityMapper.toModelList(capacityEntities)).thenReturn(capacities);
+
+        List<Capacity> result = capacityAdapter
+                .getAllCapacities(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
+
+        // THEN
+
+        assertFalse(result.isEmpty());
+        assertEquals(capacities, result);
+        verify(capacityRepository).findAll(pageable);
+    }
+    @Test
+    @DisplayName("Test getting all capacities sorted descending by name")
+    void shouldGetAllCapacitiesSortedDescendingByName() {
+        // GIVEN
+
+
+        List<Capacity> capacities = capacityData.createCapacities();
+
+        Sort sort = Sort.by(ParametersData.NAME).descending();
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
+
+        List<CapacityEntity> capacityEntities = capacityData.createCapacityEntities();
+
+        // WHEN
+
+        when(capacityRepository.findAll(pageable)).thenReturn(new PageImpl<>(capacityEntities));
+        when(capacityEntityMapper.toModelList(capacityEntities)).thenReturn(capacities);
+
+        List<Capacity> result = capacityAdapter
+                .getAllCapacities(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC, ParametersData.ORDER_NAME);
+
+        // THEN
+        assertFalse(result.isEmpty());
+        assertEquals(capacities, result);
+
+        verify(capacityRepository).findAll(pageable);
+    }
+    @Test
+    @DisplayName("Test getting all capacities with sorting by technology size (ascending)")
+    void shouldGetAllCapacitiesSortedByTechnologySizeAscending() {
+        // GIVEN
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE);
+        List<CapacityEntity> capacityEntities = capacityData.createCapacityEntities();
+        when(capacityRepository.findAllOrderedByTechnologySizeAsc(pageable)).thenReturn(new PageImpl<>(capacityEntities));
+        List<Capacity> expectedCapacities = capacityData.createCapacities();
+        when(capacityEntityMapper.toModelList(capacityEntities)).thenReturn(expectedCapacities);
+
+        // WHEN
+        List<Capacity> result = capacityAdapter
+                .getAllCapacities(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_LIST);
+
+        // THEN
+        assertEquals(expectedCapacities, result);
+        verify(capacityRepository).findAllOrderedByTechnologySizeAsc(pageable);
+    }
+    @Test
+    @DisplayName("Test getting all capacities with sorting by technology size (descending)")
+    void shouldGetAllCapacitiesSortedByTechnologySizeDescending() {
+        // GIVEN
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE);
+        List<CapacityEntity> capacityEntities = capacityData.createCapacityEntities();
+        when(capacityRepository.findAllOrderedByTechnologySizeDesc(pageable)).thenReturn(new PageImpl<>(capacityEntities));
+        List<Capacity> expectedCapacities = capacityData.createCapacities();
+        when(capacityEntityMapper.toModelList(capacityEntities)).thenReturn(expectedCapacities);
+
+        // WHEN
+        List<Capacity> result = capacityAdapter
+                .getAllCapacities(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC, ParametersData.ORDER_LIST);
+
+        // THEN
+        assertEquals(expectedCapacities, result);
+        verify(capacityRepository).findAllOrderedByTechnologySizeDesc(pageable);
+    }
 }

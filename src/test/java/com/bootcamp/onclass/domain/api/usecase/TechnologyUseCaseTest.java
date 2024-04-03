@@ -1,6 +1,9 @@
 package com.bootcamp.onclass.domain.api.usecase;
 
+import com.bootcamp.onclass.data.ParametersData;
+import com.bootcamp.onclass.data.TechnologyData;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
+import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +27,7 @@ class TechnologyUseCaseTest {
     @InjectMocks
     private TechnologyUseCase technologyUseCase;
 
+    private TechnologyData technologyData = new TechnologyData();
 
     @Test
     @DisplayName("Test successful adding  of a technology")
@@ -31,7 +35,7 @@ class TechnologyUseCaseTest {
 
         //GIVEN
 
-        Technology technology = new Technology(10L, "Python", "Biblioteca para interfaces de usuario dinámicas.");
+        Technology technology = technologyData.createTechnology();
 
         //WHEN
 
@@ -49,12 +53,12 @@ class TechnologyUseCaseTest {
     void shouldNotAddDuplicateTechnology() {
         // GIVEN
 
-        Technology technology = new Technology(10L, "Python", "Biblioteca para interfaces de usuario dinámicas.");
-        when(technologyPersistencePort.getTechnologyByName("Python")).thenReturn(Optional.of(technology));
+        Technology technology = technologyData.createTechnology();
+        when(technologyPersistencePort.getTechnologyByName(technologyData.TECHNOLOGY_NAME)).thenReturn(Optional.of(technology));
 
         // WHEN
 
-        Throwable exception = assertThrows(ElementAlreadyExistsException.class, () -> {
+        assertThrows(ElementAlreadyExistsException.class, () -> {
             technologyUseCase.addTechnology(technology);
         });
 
@@ -63,53 +67,44 @@ class TechnologyUseCaseTest {
         verify(technologyPersistencePort, never()).addTechnology(any(Technology.class));
 
     }
+
     @Test
-    @DisplayName("Expected Optional of Technology to be present")
-    void shouldGetTechnologyByNameTest() {
-
-        //GIVEN
-        Technology technology = new Technology(10L, "Python", "Biblioteca para interfaces de usuario dinámicas.");
-        technologyUseCase.addTechnology(technology);
-
-        //WHEN
-
-        when(technologyPersistencePort.getTechnologyByName("Python")).thenReturn(Optional.of(technology));
-        Optional<Technology> result = technologyPersistencePort.getTechnologyByName("Python");
-
-        //THEN
-        assertTrue(result.isPresent());
-
-    }
-    @Test
-    @DisplayName("Expected Optional of Technology to be empty")
-    void shouldNotGetTechnologyByName() {
-
+    @DisplayName("Test getting technology by name")
+    void shouldGetTechnologyByName() {
         // GIVEN
-        String name = "Java";
+        Technology technology = technologyData.createTechnology();
 
         // WHEN
-        when(technologyPersistencePort.getTechnologyByName(name)).thenReturn(Optional.empty());
-        Optional<Technology> result = technologyPersistencePort.getTechnologyByName(name);
+        when(technologyPersistencePort.getTechnologyByName(technologyData.TECHNOLOGY_NAME)).thenReturn(Optional.of(technology));
+        Optional<Technology> returnedTechnology = technologyUseCase.getTechnologyByName(technologyData.TECHNOLOGY_NAME);
 
         // THEN
-        assertFalse(result.isPresent());
-
-
+        assertTrue(returnedTechnology.isPresent());
+        assertEquals(technology, returnedTechnology.get());
     }
+
+    @Test
+    @DisplayName("Test getting non-existing technology by name")
+    void shouldThrowNoDataFoundException() {
+        // WHEN
+        when(technologyPersistencePort.getTechnologyByName(technologyData.NOT_EXISTING_TECHNOLOGY)).thenReturn(Optional.empty());
+
+        // THEN
+        assertThrows(NoDataFoundException.class, () -> technologyUseCase
+                .getTechnologyByName(technologyData.NOT_EXISTING_TECHNOLOGY));
+    }
+
     @Test
     @DisplayName("Expected list of Technologies to be returned")
     void shouldGetAllTechnologies() {
 
         // GIVEN
-        List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
-        technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));
-        technologies.add(new Technology(3L, "Spring Boot", "Framework Java para desarrollo rápido de aplicaciones"));
-
+        List<Technology> technologies = technologyData.createTechnologies();
         //WHEN
         when(technologyPersistencePort.getAllTechnologies(anyInt(), anyInt(), anyBoolean()))
                         .thenReturn(technologies);
-        List<Technology> actualTechnologies = technologyUseCase.getAllTechnologies(0, 10, true);
+        List<Technology> actualTechnologies = technologyUseCase.getAllTechnologies
+                (ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC);
 
         // THEN
         assertEquals(technologies.size(), actualTechnologies.size());
@@ -124,9 +119,11 @@ class TechnologyUseCaseTest {
         // WHEN
         when(technologyPersistencePort.getAllTechnologies(anyInt(), anyInt(), anyBoolean()))
                 .thenReturn(emptyList);
-        List<Technology> actualTechnologies = technologyUseCase.getAllTechnologies(0, 10, true);
+        List<Technology> actualTechnologies = technologyUseCase
+                .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC);
 
         // THEN
         assertTrue(actualTechnologies.isEmpty(), "Expected empty list of Technologies to be returned");
     }
+
 }
