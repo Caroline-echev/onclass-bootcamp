@@ -7,9 +7,9 @@ import com.bootcamp.onclass.domain.exception.DuplicateItemsListException;
 import com.bootcamp.onclass.domain.model.Capacity;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ICapacityPersistencePort;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
+import java.util.function.Consumer;
 
 public class CapacityUseCase implements ICapacityServicePort {
     private final ICapacityPersistencePort capacityPersistencePort;
@@ -37,6 +37,5 @@ public class CapacityUseCase implements ICapacityServicePort {
             technologyId.add( technology.getId() );
         }
         return true;
-
     }
 }

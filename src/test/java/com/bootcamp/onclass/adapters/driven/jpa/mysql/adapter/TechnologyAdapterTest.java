@@ -3,6 +3,8 @@ package com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.TechnologyEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.ITechnologyEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.ITechnologyRepository;
+import com.bootcamp.onclass.data.ParametersData;
+import com.bootcamp.onclass.data.TechnologyData;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.model.Technology;
@@ -13,7 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +38,13 @@ class TechnologyAdapterTest {
     @InjectMocks
     private TechnologyAdapter technologyAdapter;
 
+    private static TechnologyData technologyData = new TechnologyData();
     @Test
     @DisplayName("Test successful adding  of a technology")
     void shouldAddTechnology() {
         // GIVEN
 
-        Technology technology = new Technology(10L, "Python", "Biblioteca para interfaces de usuario dinámicas.");
-
+        Technology technology = technologyData.createTechnology();
 
         // WHEN
 
@@ -56,7 +60,7 @@ class TechnologyAdapterTest {
     void shouldNotAddDuplicateTechnology() {
         // GIVEN
 
-        Technology technology = new Technology(10L, "Python", "Biblioteca para interfaces de usuario dinámicas.");
+        Technology technology = technologyData.createTechnology();
 
         //WHEN
 
@@ -75,15 +79,15 @@ class TechnologyAdapterTest {
     void shouldGetTechnologyByName() {
         // GIVEN
 
-        Technology technology = new Technology(10L, "Python", "Biblioteca para interfaces de usuario dinámicas.");
-        String technologyName = "Python";
-        TechnologyEntity technologyEntity = new TechnologyEntity();
+        Technology technology = technologyData.createTechnology();
+
+        TechnologyEntity technologyEntity = technologyData.createTechnologyEntity();
 
         // WHEN
 
-        when(technologyRepository.findByName(technologyName)).thenReturn(Optional.of(technologyEntity));
+        when(technologyRepository.findByName(technologyData.TECHNOLOGY_NAME)).thenReturn(Optional.of(technologyEntity));
         when(technologyEntityMapper.toModel(technologyEntity)).thenReturn(technology);
-        Optional<Technology> result = technologyAdapter.getTechnologyByName(technologyName);
+        Optional<Technology> result = technologyAdapter.getTechnologyByName(technologyData.TECHNOLOGY_NAME);
 
         // THEN
 
@@ -96,12 +100,11 @@ class TechnologyAdapterTest {
     void shouldNotGetTechnologyByName() {
         // GIVEN
 
-            String technologyName = "Python";
-        when(technologyRepository.findByName(technologyName)).thenReturn(Optional.empty());
+        when(technologyRepository.findByName(technologyData.TECHNOLOGY_NAME)).thenReturn(Optional.empty());
 
         // WHEN
 
-        Optional<Technology> result = technologyAdapter.getTechnologyByName(technologyName);
+        Optional<Technology> result = technologyAdapter.getTechnologyByName(technologyData.TECHNOLOGY_NAME);
 
         // THEN
 
@@ -114,23 +117,15 @@ class TechnologyAdapterTest {
     void shouldGetAllTechnologies() {
         // GIVEN
 
-        List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Programming language"));
-        technologies.add(new Technology(2L, "Python", "Scripting language"));
-        technologies.add(new Technology(3L, "JavaScript", "Programming language"));
-
-        int page = 0;
-        int size = 10;
-        boolean orderAsc = true;
-        List<TechnologyEntity> technologyEntities = new ArrayList<>();
-        technologyEntities.add(new TechnologyEntity());
-
+        List<Technology> technologies = technologyData.createTechnologies();
+        List<TechnologyEntity> technologyEntities = technologyData.createTechnologyEntities();
 
         // WHEN
 
         when(technologyRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(technologyEntities));
         when(technologyEntityMapper.toModelList(technologyEntities)).thenReturn(technologies);
-        List<Technology> result = technologyAdapter.getAllTechnologies(page, size, orderAsc);
+        List<Technology> result = technologyAdapter
+                .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC);
 
         // THEN
 
@@ -142,13 +137,66 @@ class TechnologyAdapterTest {
     @DisplayName("Expected empty list of Technologies to be returned")
     void shouldGetEmptyTechnologies(){
         // GIVEN
-        int page = 0;
-        int size = 10;
-        boolean orderAsc = true;
+
         when(technologyRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
 
         // WHEN - THEN
-        assertThrows(NoDataFoundException.class, () -> technologyAdapter.getAllTechnologies(page, size, orderAsc));
+        assertThrows(NoDataFoundException.class, () -> technologyAdapter
+                .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC));
     }
+    @Test
+    @DisplayName("Test getting all technologies sorted ascending by name")
+    void shouldGetAllTechnologiesSortedAscendingByName() {
+        // GIVEN
 
+        List<Technology> technologies = technologyData.createTechnologies();
+
+        Sort sort = Sort.by(ParametersData.NAME).ascending();
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
+
+        List<TechnologyEntity> technologyEntities = technologyData.createTechnologyEntities();
+
+        // WHEN
+
+        when(technologyRepository.findAll(pageable)).thenReturn(new PageImpl<>(technologyEntities));
+        when(technologyEntityMapper.toModelList(technologyEntities)).thenReturn(technologies);
+
+        List<Technology> result = technologyAdapter
+                .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC);
+
+        // THEN
+
+        assertFalse(result.isEmpty());
+        assertEquals(technologies, result);
+        verify(technologyRepository).findAll(pageable);
+    }
+    @Test
+    @DisplayName("Test getting all technologies sorted descending by name")
+    void shouldGetAllTechnologiesSortedDescendingByName() {
+        // GIVEN
+
+
+        List<Technology> technologies = technologyData.createTechnologies();
+
+        Sort sort = Sort.by(ParametersData.NAME).descending();
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
+
+        List<TechnologyEntity> technologyEntities = technologyData.createTechnologyEntities();
+
+        // WHEN
+
+        when(technologyRepository.findAll(pageable)).thenReturn(new PageImpl<>(technologyEntities));
+        when(technologyEntityMapper.toModelList(technologyEntities)).thenReturn(technologies);
+
+        List<Technology> result = technologyAdapter
+                .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC);
+
+        // THEN
+        assertFalse(result.isEmpty());
+        assertEquals(technologies, result);
+
+        verify(technologyRepository).findAll(pageable);
+    }
 }

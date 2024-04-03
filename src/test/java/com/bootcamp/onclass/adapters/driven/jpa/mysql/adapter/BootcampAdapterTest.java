@@ -4,18 +4,20 @@ import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.BootcampEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.CapacityEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.IBootcampEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.IBootcampRepository;
+import com.bootcamp.onclass.data.BootcampData;
+import com.bootcamp.onclass.data.ParametersData;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
+import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.model.Bootcamp;
 import com.bootcamp.onclass.domain.model.Capacity;
 import com.bootcamp.onclass.domain.model.Technology;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,66 +37,29 @@ class BootcampAdapterTest {
     @InjectMocks
     private BootcampAdapter bootcampAdapter;
 
+    private BootcampData bootcampData = new BootcampData();
+
     @Test
-    void shouldAddBootcamp() {
+    @DisplayName("Test adding a bootcamp with a unique name")
+    void shouldAddBootcampWhenNameIsUnique() {
         // GIVEN
-        List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
-        technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));
-        technologies.add(new Technology(3L, "Spring Boot", "Framework Java para desarrollo rápido de aplicaciones"));
+        Bootcamp bootcamp = bootcampData.createBootcamp();
+        BootcampEntity bootcampEntity = bootcampData.createBootcampEntity();
+        when(bootcampRepository.findByName(bootcamp.getName())).thenReturn(Optional.empty());
+        when(bootcampEntityMapper.toEntity(bootcamp)).thenReturn(bootcampEntity);
+        when(bootcampRepository.save(bootcampEntity)).thenReturn(bootcampEntity);
 
-        List<Technology> technologies1 = new ArrayList<>();
-        technologies1.add(new Technology(4L, "React.js", "Biblioteca para interfaces de usuario interactivas"));
-        technologies1.add(new Technology(5L, "Angular", "Framework para aplicaciones web robustas"));
-        technologies1.add(new Technology(3L, "JavaScript", "Agrega interactividad a las páginas web"));
+        // WHEN
+        Bootcamp addedBootcamp = bootcampAdapter.addBootcamp(bootcamp);
 
-        List<Capacity> capacities = new ArrayList<>();
-        capacities.add (new  Capacity(1L,
-                "Desarrollador Backend",
-                "Diseño y construcción de la lógica y funcionalidades de la parte del servidor de una aplicación",
-                technologies));
-        capacities.add (new  Capacity(2L,
-                "Desarrollador Frontend",
-                "Creación de la interfaz de usuario y experiencia de usuario de una aplicación web o móvil",
-                technologies1));
-
-        Bootcamp bootcamp = new Bootcamp(1L, "Desarrollo Full Stack",
-                "Conviértete en un desarrollador versátil capaz de crear tanto la lógica del servidor como las interfaces de usuario interactivas",
-                capacities);
-
-        when(bootcampRepository.findByName(any())).thenReturn(Optional.of(new BootcampEntity()));
-
-        // WHEN - THEN
-        assertThrows(ElementAlreadyExistsException.class, () -> bootcampAdapter.addBootcamp(bootcamp));
-        verify(bootcampRepository, never()).save(any());
-
+        // THEN
+        assertEquals(bootcamp, addedBootcamp);
+        verify(bootcampRepository).save(bootcampEntity);
     }
     @Test
     void shouldNotAddDuplicateBootcamp() {
         // GIVEN
-        List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Lenguaje robusto para desarrollo backend"));
-        technologies.add(new Technology(2L, "Node.js", "Entorno para construir servidores escalables en JavaScript"));
-        technologies.add(new Technology(3L, "Spring Boot", "Framework Java para desarrollo rápido de aplicaciones"));
-
-        List<Technology> technologies1 = new ArrayList<>();
-        technologies1.add(new Technology(4L, "React.js", "Biblioteca para interfaces de usuario interactivas"));
-        technologies1.add(new Technology(5L, "Angular", "Framework para aplicaciones web robustas"));
-        technologies1.add(new Technology(3L, "JavaScript", "Agrega interactividad a las páginas web"));
-
-        List<Capacity> capacities = new ArrayList<>();
-        capacities.add (new  Capacity(1L,
-                "Desarrollador Backend",
-                "Diseño y construcción de la lógica y funcionalidades de la parte del servidor de una aplicación",
-                technologies));
-        capacities.add (new  Capacity(2L,
-                "Desarrollador Frontend",
-                "Creación de la interfaz de usuario y experiencia de usuario de una aplicación web o móvil",
-                technologies1));
-
-        Bootcamp bootcamp = new Bootcamp(1L, "Desarrollo Full Stack",
-                "Conviértete en un desarrollador versátil capaz de crear tanto la lógica del servidor como las interfaces de usuario interactivas",
-                capacities);
+        Bootcamp bootcamp =  bootcampData.createBootcamp();
 
         //WHEN
 
@@ -105,39 +70,131 @@ class BootcampAdapterTest {
 
         verify(bootcampRepository, never()).save(any());
     }
+
+
     @Test
+    @DisplayName("Expected list of bootcamps to be returned")
     void shouldGetAllBootcamps() {
         // GIVEN
 
-        int page = 0;
-        int size = 10;
-        boolean orderAsc = true;
-        boolean orderName = true;
-
-        List<BootcampEntity> bootcampEntities = new ArrayList<>();
-        bootcampEntities.add(new BootcampEntity(1L, "Ciencia de Datos",
-                "Domina el procesamiento de datos y el aprendizaje automático con tecnologías como Apache Spark, TensorFlow y Scikit-learn",
-                null));
-        bootcampEntities.add(new BootcampEntity(2L, "Full Stack",
-                "Conviértete en un desarrollador versátil capaz de crear tanto la lógica del servidor como las interfaces de usuario interactivas",
-                null));
-
-        List<Bootcamp> expectedBootcamps = new ArrayList<>();
-
-        Page<BootcampEntity> pageOfBootcampEntities = new PageImpl<>(bootcampEntities);
-
+        List<Bootcamp> bootcamps = bootcampData.createBootcamps();
+        List<BootcampEntity> bootcampEntities = bootcampData.createBootcampEntities();
 
         // WHEN
 
-        when(bootcampRepository.findAll(any(PageRequest.class))).thenReturn(pageOfBootcampEntities);
-        when(bootcampEntityMapper.toModelList(bootcampEntities)).thenReturn(expectedBootcamps);
-        List<Bootcamp> result = bootcampAdapter.getAllBootcamps(page, size, orderAsc, orderName);
+        when(bootcampRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(bootcampEntities));
+        when(bootcampEntityMapper.toModelList(bootcampEntities)).thenReturn(bootcamps);
+        List<Bootcamp> result = bootcampAdapter
+                .getAllBootcamps(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
 
         // THEN
 
-        assertEquals(expectedBootcamps, result);
-        verify(bootcampRepository).findAll(any(PageRequest.class));
-        verify(bootcampEntityMapper).toModelList(bootcampEntities);
+        assertFalse(result.isEmpty());
+        assertEquals(bootcamps, result);
     }
 
+    @Test
+    @DisplayName("Expected empty list of bootcamps to be returned")
+    void shouldGetEmptyBootcamps(){
+        // GIVEN
+
+        when(bootcampRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
+
+        // WHEN - THEN
+        assertThrows(NoDataFoundException.class, () -> bootcampAdapter
+                .getAllBootcamps(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME));
+    }
+    @Test
+    @DisplayName("Test getting all bootcamps sorted ascending by name")
+    void shouldGetAllBootcampsSortedAscendingByName() {
+        // GIVEN
+
+        List<Bootcamp> bootcamps = bootcampData.createBootcamps();
+
+        Sort sort = Sort.by(ParametersData.NAME).ascending();
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
+
+        List<BootcampEntity> bootcampEntities = bootcampData.createBootcampEntities();
+
+        // WHEN
+
+        when(bootcampRepository.findAll(pageable)).thenReturn(new PageImpl<>(bootcampEntities));
+        when(bootcampEntityMapper.toModelList(bootcampEntities)).thenReturn(bootcamps);
+
+        List<Bootcamp> result = bootcampAdapter
+                .getAllBootcamps(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
+
+        // THEN
+
+        assertFalse(result.isEmpty());
+        assertEquals(bootcamps, result);
+        verify(bootcampRepository).findAll(pageable);
+    }
+    @Test
+    @DisplayName("Test getting all bootcamps sorted descending by name")
+    void shouldGetAllBootcampsSortedDescendingByName() {
+        // GIVEN
+
+
+        List<Bootcamp> bootcamps =  bootcampData.createBootcamps();
+
+        Sort sort = Sort.by(ParametersData.NAME).descending();
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
+
+        List<BootcampEntity> bootcampEntities = bootcampData.createBootcampEntities();
+
+        // WHEN
+
+        when(bootcampRepository.findAll(pageable)).thenReturn(new PageImpl<>(bootcampEntities));
+        when(bootcampEntityMapper.toModelList(bootcampEntities)).thenReturn(bootcamps);
+
+        List<Bootcamp> result = bootcampAdapter
+                .getAllBootcamps(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC, ParametersData.ORDER_NAME);
+
+        // THEN
+        assertFalse(result.isEmpty());
+        assertEquals(bootcamps, result);
+
+        verify(bootcampRepository).findAll(pageable);
+    }
+    @Test
+    @DisplayName("Test getting all bootcamps with sorting by technology size (ascending)")
+    void shouldGetAllBootcampsSortedByTechnologySizeAscending() {
+        // GIVEN
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE);
+        List<BootcampEntity> bootcampEntities = bootcampData.createBootcampEntities();
+        when(bootcampRepository.findAllOrderedByCapacitySizeAsc(pageable)).thenReturn(new PageImpl<>(bootcampEntities));
+        List<Bootcamp> expectedBootcamp = bootcampData.createBootcamps();
+        when(bootcampEntityMapper.toModelList(bootcampEntities)).thenReturn(expectedBootcamp);
+
+        // WHEN
+        List<Bootcamp> result = bootcampAdapter
+                .getAllBootcamps(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_LIST);
+
+        // THEN
+        assertEquals(expectedBootcamp, result);
+        verify(bootcampRepository).findAllOrderedByCapacitySizeAsc(pageable);
+    }
+    @Test
+    @DisplayName("Test getting all bootcamps with sorting by technology size (descending)")
+    void shouldGetAllBootcampsSortedByTechnologySizeDescending() {
+        // GIVEN
+
+        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE);
+        List<BootcampEntity> bootcampEntities = bootcampData.createBootcampEntities();
+        when(bootcampRepository.findAllOrderedByCapacitySizeDesc(pageable)).thenReturn(new PageImpl<>(bootcampEntities));
+        List<Bootcamp> expectedBootcamp = bootcampData.createBootcamps();
+        when(bootcampEntityMapper.toModelList(bootcampEntities)).thenReturn(expectedBootcamp);
+
+        // WHEN
+        List<Bootcamp> result = bootcampAdapter
+                .getAllBootcamps(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC, ParametersData.ORDER_LIST);
+
+        // THEN
+        assertEquals(expectedBootcamp, result);
+        verify(bootcampRepository).findAllOrderedByCapacitySizeDesc(pageable);
+    }
 }

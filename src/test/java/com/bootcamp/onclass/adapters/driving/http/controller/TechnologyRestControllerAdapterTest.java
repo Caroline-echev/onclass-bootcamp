@@ -4,6 +4,7 @@ import com.bootcamp.onclass.adapters.driving.http.dto.request.AddTechnologyReque
 import com.bootcamp.onclass.adapters.driving.http.dto.response.technology.TechnologyResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.ITechnologyResponseMapper;
+import com.bootcamp.onclass.data.TechnologyData;
 import com.bootcamp.onclass.domain.api.ITechnologyServicePort;
 import com.bootcamp.onclass.domain.model.Technology;
 import org.junit.jupiter.api.DisplayName;
@@ -36,13 +37,15 @@ class TechnologyRestControllerAdapterTest {
     @InjectMocks
     private TechnologyRestControllerAdapter controller;
 
+    private TechnologyData technologyData = new TechnologyData();
+
     @Test
     @DisplayName("Test successful adding  of a technology")
     void testAddTechnologyRest() {
 
         // GIVEN
-        AddTechnologyRequest request = new AddTechnologyRequest("Python", "Biblioteca para interfaces de usuario dinámicas.");
-        Technology newTechnology = new Technology(1L, "Python", "Biblioteca para interfaces de usuario dinámicas.");
+        AddTechnologyRequest request = technologyData.createAddTechnologyRequest();
+        Technology newTechnology = technologyData.createTechnology();
 
         when(technologyRequestMapper.addRequestToTechnology(request)).thenReturn(newTechnology);
         when(technologyServicePort.addTechnology(newTechnology)).thenReturn(newTechnology);
@@ -61,15 +64,9 @@ class TechnologyRestControllerAdapterTest {
     @DisplayName("Expected list of Technologies to be returned")
     void testGetAllTechnologies() {
         // GIVEN
-        List<Technology> technologies = new ArrayList<>();
-        technologies.add(new Technology(1L, "Java", "Programming language"));
-        technologies.add(new Technology(2L, "Python", "Scripting language"));
+        List<Technology> technologies = technologyData.createTechnologies();
 
-        List<TechnologyResponse> expectedResponse = new ArrayList<>();
-        expectedResponse.add(new TechnologyResponse(1L, "Java", "Programming language"));
-        expectedResponse.add(new TechnologyResponse(2L, "Python", "Scripting language"));
-
-
+        List<TechnologyResponse> expectedResponse = technologyData.createTechnologyResponse();
 
         // WHEN
         when(technologyServicePort.getAllTechnologies(0, 10, true)).thenReturn(technologies);
