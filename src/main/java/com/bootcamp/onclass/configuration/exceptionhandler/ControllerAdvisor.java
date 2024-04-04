@@ -4,9 +4,9 @@ package com.bootcamp.onclass.configuration.exceptionhandler;
 
 import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.domain.exception.DuplicateItemsListException;
-import com.bootcamp.onclass.domain.exception.EmptyFieldException;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
+import com.bootcamp.onclass.domain.exception.ValidateDateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class ControllerAdvisor {
-    @ExceptionHandler(EmptyFieldException.class)
-    public ResponseEntity<ExceptionCodeResponse> handleEmptyFieldException(EmptyFieldException exception) {
 
-        return ResponseEntity.badRequest().body(new ExceptionCodeResponse(
-                String.format(Constants.EMPTY_FIELD_EXCEPTION_MESSAGE, exception.getMessage()),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
-
-    }
 
     @ExceptionHandler(ElementAlreadyExistsException.class)
     public ResponseEntity<ExceptionCodeResponse> handleElementAlreadyExistsException() {
@@ -60,6 +53,12 @@ public class ControllerAdvisor {
     }
 
 
+    @ExceptionHandler(ValidateDateException.class)
+    public ResponseEntity<ExceptionCodeResponse> handleValidateDateException() {
 
+        return ResponseEntity.badRequest().body(new ExceptionCodeResponse(Constants.VALIDATE_DATE_RANGE_EXCEPTION_MESSAGE,
+                HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
+
+    }
 
 }

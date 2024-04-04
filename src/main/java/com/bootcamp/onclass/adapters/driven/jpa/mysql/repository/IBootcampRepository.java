@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface IBootcampRepository  extends JpaRepository<BootcampEntity, Long> {
     Optional<BootcampEntity> findByName(String name);
+    Optional<BootcampEntity> findById(Long id);
+
     @Query("SELECT b FROM BootcampEntity b ORDER BY SIZE(b.capacities) ASC")
     Page<BootcampEntity> findAllOrderedByCapacitySizeAsc(Pageable pageable);
     @Query("SELECT b FROM BootcampEntity b ORDER BY SIZE(b.capacities) DESC")
