@@ -3,8 +3,11 @@ package com.bootcamp.onclass.domain.api.usecase;
 import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.domain.api.IVersionServicePort;
 import com.bootcamp.onclass.domain.exception.ValidateDateException;
+import com.bootcamp.onclass.domain.model.Bootcamp;
 import com.bootcamp.onclass.domain.model.Version;
 import com.bootcamp.onclass.domain.spi.IVersionPersistencePort;
+
+import java.util.List;
 
 
 public class VersionUseCase implements IVersionServicePort {
@@ -22,6 +25,11 @@ public class VersionUseCase implements IVersionServicePort {
         }
 
         return versionPersistencePort.addVersion(version);
+    }
+
+    @Override
+    public List<Version> getAllVersionByBootcamp(List<Long> bootcampIds, Integer page, Integer size, boolean orderAsc, boolean orderDate) {
+        return versionPersistencePort.getAllVersionByBootcamp(bootcampIds, page, size, orderAsc, orderDate);
     }
 
 }

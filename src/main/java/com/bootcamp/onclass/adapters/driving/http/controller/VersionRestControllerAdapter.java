@@ -1,19 +1,20 @@
 package com.bootcamp.onclass.adapters.driving.http.controller;
 
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddVersionRequest;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.bootcamp.BootcampResponse;
 import com.bootcamp.onclass.adapters.driving.http.dto.response.version.VersionResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.IVersionRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.IVersionResponseMapper;
 import com.bootcamp.onclass.domain.api.IVersionServicePort;
+import com.bootcamp.onclass.domain.model.Bootcamp;
 import com.bootcamp.onclass.domain.model.Version;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/version")
@@ -28,4 +29,17 @@ public class VersionRestControllerAdapter {
         VersionResponse response = versionResponseMapper.modelToFindResponse(version);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/getVersions")
+    public ResponseEntity<List<VersionResponse>> getAllVersionByBootcamp(@Valid
+            @RequestParam List<Long> bootcampIds,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "true") boolean orderAsc,
+            @RequestParam(defaultValue = "false") boolean orderDate) {
+        List<Version> versions = versionServicePort.getAllVersionByBootcamp(bootcampIds, page, size, orderAsc, orderDate);
+        List<VersionResponse> response = versions.stream().map(versionResponseMapper::modelToFindResponse).toList();
+
+        return ResponseEntity.ok().body(response);
+    }
+
 }
