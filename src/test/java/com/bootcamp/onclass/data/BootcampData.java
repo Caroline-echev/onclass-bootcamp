@@ -3,6 +3,7 @@ package com.bootcamp.onclass.data;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.BootcampEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.CapacityEntity;
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddBootcampRequest;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.bootcamp.BootcampNameResponse;
 import com.bootcamp.onclass.domain.model.Bootcamp;
 import com.bootcamp.onclass.domain.model.Capacity;
 import com.bootcamp.onclass.domain.model.Technology;
@@ -64,5 +65,8 @@ public class BootcampData {
         return new AddBootcampRequest("Desarrollo Full Stack",
                 "Conviértete en un desarrollador versátil capaz de crear tanto la lógica del servidor como las interfaces de usuario interactivas",
                 capacities);
+    }
+    public  static BootcampNameResponse createBootcampNameResponse() {
+        return new BootcampNameResponse("Desarrollo Full Stack");
     }
 }
