@@ -18,18 +18,15 @@ public class VersionUseCase implements IVersionServicePort {
 
     @Override
     public Version addVersion(Version version) {
-        if (!validateDateRange(version)) {
+
+        if (!version.getFinalDate().isAfter(version.getInitialDate())) {
             throw new ValidateDateException(Constants.VALIDATE_DATE_RANGE_EXCEPTION_MESSAGE);
         }
 
         return versionPersistencePort.addVersion(version);
     }
-    private boolean validateDateRange(Version version) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate initialLocalDate = LocalDate.parse(version.getInitialDate(), formatter);
-        LocalDate finalLocalDate = LocalDate.parse(version.getFinalDate(), formatter);
-        return finalLocalDate.isAfter(initialLocalDate);
-    }
+
+
 
 
 

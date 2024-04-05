@@ -37,13 +37,14 @@ public class CapacityAdapter implements ICapacityPersistencePort {
     @Override
     public List<Capacity> getAllCapacities(Integer page, Integer size, boolean orderAsc, boolean orderName) {
         Sort sort;
+        Pageable pageable;
         List<CapacityEntity> capacities = null; 
         if (orderName) {
             sort = orderAsc ? Sort.by("name").ascending() : Sort.by("name").descending();
-            Pageable pageable = PageRequest.of(page, size, sort);
+            pageable = PageRequest.of(page, size, sort);
             capacities = capacityRepository.findAll(pageable).getContent();
         } else {
-            Pageable pageable = PageRequest.of(page, size);
+             pageable = PageRequest.of(page, size);
             capacities = orderAsc ? capacityRepository.findAllOrderedByTechnologySizeAsc(pageable).getContent() :
                     capacityRepository.findAllOrderedByTechnologySizeDesc(pageable).getContent();
         }

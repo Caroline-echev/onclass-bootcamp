@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,10 +23,10 @@ public class VersionEntity {
     private  Long id;
 
     @Column(nullable = false)
-    private String initialDate;
+    private LocalDate initialDate;
 
     @Column(nullable = false)
-    private  String finalDate;
+    private  LocalDate finalDate;
 
     @Column(nullable = false)
     private int maxCapacity;

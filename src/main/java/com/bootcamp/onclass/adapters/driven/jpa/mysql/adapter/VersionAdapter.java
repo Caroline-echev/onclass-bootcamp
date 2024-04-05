@@ -20,9 +20,12 @@ public class VersionAdapter implements IVersionPersistencePort {
     private final IBootcampEntityMapper bootcampEntityMapper;
     @Override
     public Version addVersion(Version version) {
+        validateBootcamp(version);
+        return versionEntityMapper.toModel(versionRepository.save(versionEntityMapper.toEntity(version)));
+    }
+    private void validateBootcamp(Version version) {
         BootcampEntity bootcamp = bootcampRepository.findById(version.getBootcamp().getId())
                 .orElseThrow(() -> new NoDataFoundException(Constants.NO_DATA_FOUND_EXCEPTION_MESSAGE));
         version.setBootcamp(bootcampEntityMapper.toModel(bootcamp));
-        return versionEntityMapper.toModel(versionRepository.save(versionEntityMapper.toEntity(version)));
     }
 }

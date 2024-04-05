@@ -16,7 +16,6 @@ public final class RequestConstants {
     public static final String FIELD_MAX_CAPACITY_NULL_MESSAGE = "Field 'maxCapacity' cannot be null";
     public static final String FIELD_BOOTCAMP_EMPTY_MESSAGE = "Field 'bootcamp' cannot be null ";
     public static final String FIELD_MAX_CAPACITY_MIN_MESSAGE = "Field 'maxCapacity' must be greater than 0";
-    public static final String FIELD_DATE_FORMAT_MESSAGE = "dd/MM/yyyy";
     public static final String FIELD_DATE_ALREADY_PASSED_MESSAGE = "The date has already passed ";
 
 }

@@ -38,13 +38,14 @@ public class BootcampAdapter implements IBootcampPersistencePort {
     @Override
     public List<Bootcamp> getAllBootcamps(Integer page, Integer size, boolean orderAsc, boolean orderName) {
         Sort sort;
+        Pageable pageable;
         List<BootcampEntity> bootcamps = null;
         if (orderName) {
             sort = orderAsc ? Sort.by("name").ascending() : Sort.by("name").descending();
-            Pageable pageable = PageRequest.of(page, size, sort);
+            pageable = PageRequest.of(page, size, sort);
             bootcamps = bootcampRepository.findAll(pageable).getContent();
         } else {
-            Pageable pageable = PageRequest.of(page, size);
+            pageable = PageRequest.of(page, size);
             bootcamps = orderAsc ? bootcampRepository.findAllOrderedByCapacitySizeAsc(pageable).getContent() :
                     bootcampRepository.findAllOrderedByCapacitySizeDesc(pageable).getContent();
         }

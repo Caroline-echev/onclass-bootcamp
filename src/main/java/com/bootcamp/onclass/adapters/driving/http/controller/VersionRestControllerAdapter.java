@@ -1,7 +1,9 @@
 package com.bootcamp.onclass.adapters.driving.http.controller;
 
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddVersionRequest;
+import com.bootcamp.onclass.adapters.driving.http.dto.response.version.VersionResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.IVersionRequestMapper;
+import com.bootcamp.onclass.adapters.driving.http.mapper.IVersionResponseMapper;
 import com.bootcamp.onclass.domain.api.IVersionServicePort;
 import com.bootcamp.onclass.domain.model.Version;
 import jakarta.validation.Valid;
@@ -19,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class VersionRestControllerAdapter {
     private final IVersionServicePort versionServicePort;
     private final IVersionRequestMapper versionRequestMapper;
+    private final IVersionResponseMapper versionResponseMapper;
     @PostMapping("/addVersion")
-    public ResponseEntity<Version> addVersion(@Valid @RequestBody AddVersionRequest request){
-        return new ResponseEntity<>(versionServicePort.addVersion(versionRequestMapper.addRequestToVersion(request)), HttpStatus.OK);
+    public ResponseEntity<VersionResponse> addVersion(@Valid @RequestBody AddVersionRequest request){
+        Version version = versionServicePort.addVersion(versionRequestMapper.addRequestToVersion(request));
+        VersionResponse response = versionResponseMapper.modelToFindResponse(version);
+        return ResponseEntity.ok(response);
     }
 }
