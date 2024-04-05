@@ -5,9 +5,9 @@ import java.time.LocalDate;
 
 public class Version {
     private  final Long id;
-    private LocalDate initialDate;
+    private final LocalDate initialDate;
 
-    private LocalDate finalDate;
+    private final LocalDate finalDate;
     private final  int maxCapacity;
     private Bootcamp bootcamp;
     public Version(Long id, LocalDate initialDate, LocalDate finalDate, int maxCapacity, Bootcamp bootcamp) {

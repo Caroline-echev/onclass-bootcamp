@@ -6,8 +6,6 @@ import com.bootcamp.onclass.domain.exception.ValidateDateException;
 import com.bootcamp.onclass.domain.model.Version;
 import com.bootcamp.onclass.domain.spi.IVersionPersistencePort;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class VersionUseCase implements IVersionServicePort {
     private final IVersionPersistencePort versionPersistencePort;
@@ -25,9 +23,5 @@ public class VersionUseCase implements IVersionServicePort {
 
         return versionPersistencePort.addVersion(version);
     }
-
-
-
-
 
 }

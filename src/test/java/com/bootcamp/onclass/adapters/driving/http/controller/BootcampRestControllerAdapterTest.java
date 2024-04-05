@@ -76,4 +76,5 @@ class BootcampRestControllerAdapterTest {
         verify(bootcampServicePort).getAllBootcamps(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
         verify(bootcampResponseMapper, times(bootcamps.size())).modelToFindResponse(any());
     }
+
 }

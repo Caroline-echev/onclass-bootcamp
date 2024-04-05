@@ -2,10 +2,7 @@ package com.bootcamp.onclass.adapters.driven.jpa.mysql.entity;
 
 import com.bootcamp.onclass.domain.model.Bootcamp;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -17,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class VersionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
