@@ -9,11 +9,15 @@ import com.bootcamp.onclass.domain.model.Bootcamp;
 import com.bootcamp.onclass.domain.model.Version;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 public class VersionData {
     static BootcampData bootcampData = new BootcampData();
-
+    public static final String INITIAL_DATE = "initialDate";
+    public static final String MAX_CAPACITY ="maxCapacity";
+    public static final String BOOTCAMP_NAME ="bootcamp.name";
+    public static final Long BOOTCAMP_ID = 1L;
     static LocalDate initialDate = LocalDate.parse("2024-07-01");
     static LocalDate finalDate = LocalDate.parse("2024-07-31");
     public static Version createVersion() {
@@ -35,4 +39,22 @@ public class VersionData {
         VersionEntity versionEntity = new  VersionEntity(1L, initialDate, finalDate, 10, bootcampData.createBootcampEntity());
         return versionEntity;
     }
+    public static List<Version> createVersions() {
+        List<Version> versions = Arrays.asList(
+                new Version(1L, initialDate, finalDate,  10,  bootcampData.createBootcamp()),
+                new Version(2L, initialDate, finalDate,  10,  bootcampData.createBootcamp()),
+                new Version(3L, initialDate, finalDate,  10,  bootcampData.createBootcamp())
+        );
+        return versions;
+    }
+
+    public static List<VersionEntity> createVersionEntities() {
+        List<VersionEntity> versions = Arrays.asList(
+                new VersionEntity(1L, initialDate, finalDate,  10, bootcampData.createBootcampEntity()),
+                new VersionEntity(2L, initialDate, finalDate,  10,  bootcampData.createBootcampEntity()),
+                new VersionEntity(3L, initialDate, finalDate,  10, bootcampData.createBootcampEntity())
+        );
+        return versions;
+    }
+
 }

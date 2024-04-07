@@ -6,6 +6,8 @@ import com.bootcamp.onclass.domain.exception.ValidateDateException;
 import com.bootcamp.onclass.domain.model.Version;
 import com.bootcamp.onclass.domain.spi.IVersionPersistencePort;
 
+import java.util.List;
+
 
 public class VersionUseCase implements IVersionServicePort {
     private final IVersionPersistencePort versionPersistencePort;
@@ -22,6 +24,11 @@ public class VersionUseCase implements IVersionServicePort {
         }
 
         return versionPersistencePort.addVersion(version);
+    }
+
+    @Override
+    public List<Version> getAllVersionByBootcamp(Long bootcampId, Integer page, Integer size, boolean orderAsc, String orderType) {
+        return versionPersistencePort.getAllVersionByBootcamp(bootcampId, page, size, orderAsc, orderType);
     }
 
 }

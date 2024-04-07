@@ -1,5 +1,6 @@
 package com.bootcamp.onclass.domain.api.usecase;
 
+import com.bootcamp.onclass.data.ParametersData;
 import com.bootcamp.onclass.data.VersionData;
 import com.bootcamp.onclass.domain.exception.ValidateDateException;
 import com.bootcamp.onclass.domain.model.Technology;
@@ -12,6 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -44,7 +49,7 @@ class VersionUseCaseTest {
     }
     @Test
     @DisplayName("Test unsuccessful adding of a technology")
-    public void ShouldAddVersionValidateDateException() {
+     void ShouldAddVersionValidateDateException() {
         // GIVEN
         Version Version = versionData.createVersionValidateDate();
 
@@ -54,5 +59,24 @@ class VersionUseCaseTest {
         });
          //THEN
         verify(versionPersistencePort, never()).addVersion(any(Version.class));
+    }
+    @Test
+    void testGetAllVersionByBootcamp() {
+        // GIVEN
+
+        List<Version> versions = VersionData.createVersions();
+
+        // WHEN
+        when(versionPersistencePort
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null))
+                .thenReturn(versions);
+
+        List<Version> actualVersions = versionUseCase
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null);
+
+        // Then
+        assertEquals(versions, actualVersions);
+        verify(versionPersistencePort)
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null);
     }
 }

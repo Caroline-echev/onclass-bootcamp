@@ -1,12 +1,8 @@
 package com.bootcamp.onclass.adapters.driven.jpa.mysql.entity;
 
-import com.bootcamp.onclass.domain.model.Bootcamp;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "version")

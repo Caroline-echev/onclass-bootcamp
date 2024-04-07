@@ -1,14 +1,11 @@
 package com.bootcamp.onclass.adapters.driving.http.controller;
 
 import com.bootcamp.onclass.adapters.driving.http.dto.request.AddBootcampRequest;
-import com.bootcamp.onclass.adapters.driving.http.dto.request.AddCapacityRequest;
 import com.bootcamp.onclass.adapters.driving.http.dto.response.bootcamp.BootcampResponse;
-import com.bootcamp.onclass.adapters.driving.http.dto.response.capacity.CapacityResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.IBootcampRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.IBootcampResponseMapper;
 import com.bootcamp.onclass.domain.api.IBootcampServicePort;
 import com.bootcamp.onclass.domain.model.Bootcamp;
-import com.bootcamp.onclass.domain.model.Capacity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

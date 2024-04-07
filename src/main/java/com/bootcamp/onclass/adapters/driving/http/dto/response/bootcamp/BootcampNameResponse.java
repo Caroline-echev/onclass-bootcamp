@@ -1,6 +1,4 @@
 package com.bootcamp.onclass.adapters.driving.http.dto.response.bootcamp;
-
-import com.bootcamp.onclass.adapters.driving.http.dto.response.capacity.CapacitiesBootcampResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
