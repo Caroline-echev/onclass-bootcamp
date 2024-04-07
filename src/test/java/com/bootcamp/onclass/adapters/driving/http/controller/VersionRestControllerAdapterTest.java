@@ -4,8 +4,10 @@ import com.bootcamp.onclass.adapters.driving.http.dto.request.AddVersionRequest;
 import com.bootcamp.onclass.adapters.driving.http.dto.response.version.VersionResponse;
 import com.bootcamp.onclass.adapters.driving.http.mapper.IVersionRequestMapper;
 import com.bootcamp.onclass.adapters.driving.http.mapper.IVersionResponseMapper;
+import com.bootcamp.onclass.data.ParametersData;
 import com.bootcamp.onclass.data.VersionData;
 import com.bootcamp.onclass.domain.api.IVersionServicePort;
+import com.bootcamp.onclass.domain.model.Bootcamp;
 import com.bootcamp.onclass.domain.model.Version;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class VersionRestControllerAdapterTest {
@@ -54,4 +58,23 @@ class VersionRestControllerAdapterTest {
         verify(versionServicePort).addVersion(version);
 
     }
+
+  /*  @Test
+    @DisplayName("Expected list of versiones by bootcamps to be returned")
+    void GetAllVersion() {
+        // GIVEN
+        List<Long> bootcampIds = List.of(1L);
+        List<Version> versions = versionData.createVersions();
+
+        // WHEN
+
+        when(versionServicePort
+                .getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME)).thenReturn(versions);
+        controller.getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
+
+        // THEN
+
+        verify(versionServicePort).getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
+        verify(versionResponseMapper, times(versions.size())).modelToFindResponse(any());
+    }*/
 }

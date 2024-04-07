@@ -2,7 +2,6 @@ package com.bootcamp.onclass.adapters.driving.http.dto.request;
 
 import com.bootcamp.onclass.adapters.driving.http.util.RequestConstants;
 import com.bootcamp.onclass.domain.model.Capacity;
-import com.bootcamp.onclass.domain.model.Technology;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

@@ -1,6 +1,5 @@
 package com.bootcamp.onclass.adapters.driven.jpa.mysql.entity;
 
-import com.bootcamp.onclass.domain.model.Bootcamp;
 import jakarta.persistence.*;
 import lombok.*;
 
