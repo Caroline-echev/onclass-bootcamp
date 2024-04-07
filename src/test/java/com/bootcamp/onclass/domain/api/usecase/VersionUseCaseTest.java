@@ -60,24 +60,23 @@ class VersionUseCaseTest {
          //THEN
         verify(versionPersistencePort, never()).addVersion(any(Version.class));
     }
-   /* @Test
+    @Test
     void testGetAllVersionByBootcamp() {
         // GIVEN
-        List<Long> bootcampIds = List.of(1L);
 
         List<Version> versions = VersionData.createVersions();
 
         // WHEN
         when(versionPersistencePort
-                .getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_DATE))
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null))
                 .thenReturn(versions);
 
         List<Version> actualVersions = versionUseCase
-                .getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_DATE);
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null);
 
         // Then
         assertEquals(versions, actualVersions);
         verify(versionPersistencePort)
-                .getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_DATE);
-    }*/
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null);
+    }
 }

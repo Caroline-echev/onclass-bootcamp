@@ -13,6 +13,8 @@ import java.util.List;
 
 public class BootcampData {
     private static CapacityData capacityData = new CapacityData();
+
+
     public static Bootcamp createBootcamp() {
 
         List<Capacity> capacities = capacityData.createCapacities();

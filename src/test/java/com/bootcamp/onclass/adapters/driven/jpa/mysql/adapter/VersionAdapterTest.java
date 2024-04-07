@@ -6,6 +6,7 @@ import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.IBootcampEntityMapp
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.IVersionEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.IBootcampRepository;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.IVersionRepository;
+import com.bootcamp.onclass.configuration.Constants;
 import com.bootcamp.onclass.data.BootcampData;
 import com.bootcamp.onclass.data.ParametersData;
 import com.bootcamp.onclass.data.VersionData;
@@ -18,11 +19,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -90,88 +89,76 @@ class VersionAdapterTest {
             versionAdapter.addVersion(version);
         });
     }
- /*   @Test
-    @DisplayName("Test the retrieval of all versions by bootcamp")
+
+    @Test
+    @DisplayName("Test getting all versions by bootcamp")
     void testGetAllVersionByBootcamp() {
         // GIVEN
-        List<Long> bootcampIds = List.of(1L);
-        List<VersionEntity> versionEntities = versionData.createVersionEntities();
-        List<Version> expectedVersions = versionData.createVersions();
-
-        when(versionRepository.findByBootcampIdIn(bootcampIds,
-                PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, Sort.by(versionData.VERSION_INITIAL_DATE))))
-                .thenReturn(versionEntities);
-        when(versionEntityMapper.toModelList(versionEntities)).thenReturn(expectedVersions);
-
-        // WHEN
-        List<Version> actualVersions = versionAdapter
-                .getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_DATE);
-
-        // THEN
-        assertEquals(expectedVersions.size(), actualVersions.size());
-        assertEquals(expectedVersions, actualVersions);
-        verify(versionRepository).findByBootcampIdIn(eq(bootcampIds), any(Pageable.class));
-    }
-*/
-
-   /* @Test
-    @DisplayName("Test recovery of all versions by bootcamp sorted by initial date in ascending order")
-    void testGetAllVersionByBootcampInitialDateOrdenAsc() {
-        // GIVEN
-        List<Long> bootcampIds = List.of(1L);
-        
-        List<Version> versions =  versionData.createVersions();
-
-        Sort sort = Sort.by(versionData.VERSION_INITIAL_DATE).ascending();
-
-        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
 
         List<VersionEntity> versionEntities = versionData.createVersionEntities();
+        Page<VersionEntity> versionEntityPage = new PageImpl<>(versionEntities);
 
         // WHEN
 
-        when(versionRepository.findByBootcampIdIn(bootcampIds, pageable)).thenReturn(versionEntities);
-        when(versionEntityMapper.toModelList(versionEntities)).thenReturn(versions);
-
-
+        when(versionRepository.findByBootcampId(eq(versionData.BOOTCAMP_ID), any(Pageable.class))).thenReturn(versionEntityPage);
         List<Version> result = versionAdapter
-                .getAllVersionByBootcamp(bootcampIds,ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_DATE);
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID,ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, versionData.BOOTCAMP_NAME);
 
         // THEN
-        assertFalse(result.isEmpty());
-        assertEquals(versions, result);
-
-        verify(versionRepository).findAll(pageable);
-
+        assertNotNull(result);
     }
     @Test
-    @DisplayName("Test recovery of all versions by bootcamp sorted by initial date in descending order")
-    void testGetAllVersionByBootcampInitialDateOrdenDesc() {
-        // GIVEN
-        List<Long> bootcampIds = List.of(1L);
+    public void testCreateSort_WhenOrderAscIsTrue_ReturnsAscendingSort() {
+        // GIVEN - WHEN
 
-        List<Version> versions =  versionData.createVersions();
-
-        Sort sort = Sort.by(versionData.VERSION_INITIAL_DATE).descending();
-
-        Pageable pageable = PageRequest.of(ParametersData.PAGE, ParametersData.SIZE, sort);
-
-        List<VersionEntity> versionEntities = versionData.createVersionEntities();
-
-        // WHEN
-
-        when(versionRepository.findByBootcampIdIn(bootcampIds, pageable)).thenReturn(versionEntities);
-        when(versionEntityMapper.toModelList(versionEntities)).thenReturn(versions);
-
-
-        List<Version> result = versionAdapter
-                .getAllVersionByBootcamp(bootcampIds,ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC, ParametersData.ORDER_NAME);
+        Pageable pageable = VersionAdapter
+                .createSort(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, versionData.INITIAL_DATE);
 
         // THEN
-        assertFalse(result.isEmpty());
-        assertEquals(versions, result);
 
-        verify(versionRepository).findAll(pageable);
-    }*/
+        assertNotNull(pageable);
+        assertEquals(ParametersData.PAGE, pageable.getPageNumber());
+        assertEquals(ParametersData.SIZE, pageable.getPageSize());
+        Sort sort = pageable.getSort();
+        assertNotNull(sort);
+        assertTrue(sort.isSorted());
+        assertEquals(versionData.INITIAL_DATE, sort.getOrderFor(versionData.INITIAL_DATE).getProperty());
+        assertEquals(Sort.Direction.ASC, sort.getOrderFor(VersionData.INITIAL_DATE).getDirection());
+    }
 
+    @Test
+    public void testCreateSort_WhenOrderAscIsFalse_ReturnsDescendingSort() {
+        // GIVEN - WHEN
+        Pageable pageable = VersionAdapter
+                .createSort(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC, versionData.INITIAL_DATE);
+
+        // THEN
+        assertNotNull(pageable);
+        assertEquals(ParametersData.PAGE, pageable.getPageNumber());
+        assertEquals(ParametersData.SIZE, pageable.getPageSize());
+        Sort sort = pageable.getSort();
+        assertNotNull(sort);
+        assertTrue(sort.isSorted());
+        assertEquals(versionData.INITIAL_DATE, sort.getOrderFor(versionData.INITIAL_DATE).getProperty());
+        assertEquals(Sort.Direction.DESC, sort.getOrderFor(versionData.INITIAL_DATE).getDirection());
+    }
+
+    @Test
+    public void testGetAllVersionByBootcamp_WhenNoVersionsFound_ThrowsException() {
+        // GIVEN
+        Pageable pageable = VersionAdapter
+                .createSort(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, versionData.INITIAL_DATE);
+        PageImpl<VersionEntity> pageResult = new PageImpl<>(new ArrayList<>(), pageable, 0);
+
+        // WHEN
+        when(versionRepository.findAll(pageable)).thenReturn(pageResult);
+        VersionAdapter versionAdapter = new VersionAdapter(versionRepository, null, null, null);
+
+        //THEN
+        NoDataFoundException exception = assertThrows(NoDataFoundException.class, () -> {
+            versionAdapter.getAllVersionByBootcamp(null, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, versionData.INITIAL_DATE);
+        });
+
+        assertEquals(Constants.NO_DATA_FOUND_EXCEPTION_MESSAGE, exception.getMessage());
+    }
 }

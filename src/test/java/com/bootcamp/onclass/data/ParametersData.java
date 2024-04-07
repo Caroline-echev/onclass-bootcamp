@@ -9,5 +9,5 @@ public class ParametersData {
     public static final boolean ORDER_LIST= false;
     public static final String NAME = "name";
 
-    public static final boolean ORDER_DATE = true;
+
 }

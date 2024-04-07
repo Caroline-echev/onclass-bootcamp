@@ -14,8 +14,10 @@ import java.util.List;
 
 public class VersionData {
     static BootcampData bootcampData = new BootcampData();
-    public static final String VERSION_INITIAL_DATE = "initialDate";
-    public static final String VERSION_MAX_CAPACITY ="maxCapacity";
+    public static final String INITIAL_DATE = "initialDate";
+    public static final String MAX_CAPACITY ="maxCapacity";
+    public static final String BOOTCAMP_NAME ="bootcamp.name";
+    public static final Long BOOTCAMP_ID = 1L;
     static LocalDate initialDate = LocalDate.parse("2024-07-01");
     static LocalDate finalDate = LocalDate.parse("2024-07-31");
     public static Version createVersion() {

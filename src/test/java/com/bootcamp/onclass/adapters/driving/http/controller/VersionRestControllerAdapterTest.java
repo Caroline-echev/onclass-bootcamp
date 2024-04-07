@@ -59,22 +59,22 @@ class VersionRestControllerAdapterTest {
 
     }
 
-  /*  @Test
+    @Test
     @DisplayName("Expected list of versiones by bootcamps to be returned")
     void GetAllVersion() {
         // GIVEN
-        List<Long> bootcampIds = List.of(1L);
+
         List<Version> versions = versionData.createVersions();
 
         // WHEN
 
         when(versionServicePort
-                .getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME)).thenReturn(versions);
-        controller.getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
+                .getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null)).thenReturn(versions);
+        controller.getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null);
 
         // THEN
 
-        verify(versionServicePort).getAllVersionByBootcamp(bootcampIds, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, ParametersData.ORDER_NAME);
+        verify(versionServicePort).getAllVersionByBootcamp(versionData.BOOTCAMP_ID, ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC, null);
         verify(versionResponseMapper, times(versions.size())).modelToFindResponse(any());
-    }*/
+    }
 }
