@@ -10,6 +10,7 @@ import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,17 +40,17 @@ public class TechnologyAdapter implements ITechnologyPersistencePort {
         return technologyRepository.findByName(name).map(technologyEntityMapper::toModel);
     }
     @Override
-    public List<Technology> getAllTechnologies(Integer page, Integer size, boolean orderAsc) {
+    public Page<Technology> getAllTechnologies(Integer page, Integer size, boolean orderAsc) {
         Sort sort = orderAsc ? Sort.by("name").ascending() : Sort.by("name").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        List<TechnologyEntity> technologies = technologyRepository.findAll(pageable).getContent();
+        Page<TechnologyEntity> technologyEntities = technologyRepository.findAll(pageable);
 
-
-        if (technologies.isEmpty()) {
+        if (technologyEntities.isEmpty()) {
             throw new NoDataFoundException(Constants.NO_DATA_FOUND_EXCEPTION_MESSAGE);
         }
 
-        return technologyEntityMapper.toModelList(technologies);
+        return technologyEntities.map(technologyEntityMapper::toModel);
     }
+
 }

@@ -1,10 +1,11 @@
-package com.onclass.user.configuration.openapi;
+package com.bootcamp.onclass.configuration.openapi;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 @Configuration
 public class SwaggerConfiguration {
 
@@ -18,8 +19,8 @@ public class SwaggerConfiguration {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")))
                 .info(new io.swagger.v3.oas.models.info.Info()
-                        .title("Users")
-                        .description("User management service")
+                        .title("Bootcamps")
+                        .description("Bootcamp management service")
                         .version("1.0.0"));
     }
 }

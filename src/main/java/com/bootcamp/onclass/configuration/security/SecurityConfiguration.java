@@ -1,10 +1,9 @@
-package com.onclass.user.configuration.security;
+package com.bootcamp.onclass.configuration.security;
 
-import com.onclass.user.configuration.jwt.JwtAuthenticationFilter;
+import com.bootcamp.onclass.configuration.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authProvider;
 
 
 
@@ -26,18 +24,16 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/doc/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .requestMatchers("/auth/register/admin").hasAuthority("ADMIN")
-                                .requestMatchers("/auth/register/tutor").hasAuthority("ADMIN")
-                                .requestMatchers("/auth/register/student").hasAnyAuthority("ADMIN", "TUTOR")
-                                .requestMatchers("/user/registerUser").permitAll()
+                                .requestMatchers("/technology/**").hasAuthority("ADMIN")
+                                .requestMatchers("/capacity/**").hasAuthority("ADMIN")
+                                .requestMatchers("/version/**").hasAuthority("ADMIN")
+                                .requestMatchers("/bootcamp/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager->
                         sessionManager
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 

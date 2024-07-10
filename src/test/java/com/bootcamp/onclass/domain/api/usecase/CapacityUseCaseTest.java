@@ -42,7 +42,7 @@ class CapacityUseCaseTest {
         //WHEN
 
         when(capacityPersistencePort.addCapacity(capacity)).thenReturn(capacity);
-        capacityUseCase.addCapacity(capacity);
+       capacityUseCase.addCapacity(capacity);
 
         //THEN
 

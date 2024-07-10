@@ -3,6 +3,7 @@ package com.bootcamp.onclass.adapters.driving.http.mapper;
 import com.bootcamp.onclass.adapters.driving.http.dto.response.technology.TechnologyResponse;
 import com.bootcamp.onclass.domain.model.Technology;
 import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,5 +11,6 @@ import java.util.List;
 public interface ITechnologyResponseMapper {
     TechnologyResponse toTechnologyResponse(Technology technology);
 
-    List<TechnologyResponse> toTechnologyResponseList(List<Technology> technologies);
+
+    TechnologyResponse toResponse(Technology technology);
 }

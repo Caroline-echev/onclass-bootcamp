@@ -7,6 +7,7 @@ import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.model.Technology;
 import com.bootcamp.onclass.domain.spi.ITechnologyPersistencePort;
+import org.springframework.data.domain.Page;
 
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class TechnologyUseCase implements ITechnologyServicePort {
         return technologyPersistencePort.getTechnologyByName(technology.getName()).isPresent();
     }
     @Override
-    public List<Technology> getAllTechnologies(Integer page, Integer size, boolean orderAsc) {
+    public Page<Technology> getAllTechnologies(Integer page, Integer size, boolean orderAsc) {
         return technologyPersistencePort.getAllTechnologies(page, size, orderAsc);
 
     }

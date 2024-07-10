@@ -14,10 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,7 +121,7 @@ class TechnologyAdapterTest {
 
         when(technologyRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(technologyEntities));
         when(technologyEntityMapper.toModelList(technologyEntities)).thenReturn(technologies);
-        List<Technology> result = technologyAdapter
+        Page<Technology> result = technologyAdapter
                 .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC);
 
         // THEN
@@ -162,7 +159,7 @@ class TechnologyAdapterTest {
         when(technologyRepository.findAll(pageable)).thenReturn(new PageImpl<>(technologyEntities));
         when(technologyEntityMapper.toModelList(technologyEntities)).thenReturn(technologies);
 
-        List<Technology> result = technologyAdapter
+        Page<Technology> result = technologyAdapter
                 .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_ASC);
 
         // THEN
@@ -190,7 +187,7 @@ class TechnologyAdapterTest {
         when(technologyRepository.findAll(pageable)).thenReturn(new PageImpl<>(technologyEntities));
         when(technologyEntityMapper.toModelList(technologyEntities)).thenReturn(technologies);
 
-        List<Technology> result = technologyAdapter
+        Page<Technology> result = technologyAdapter
                 .getAllTechnologies(ParametersData.PAGE, ParametersData.SIZE, ParametersData.ORDER_DESC);
 
         // THEN

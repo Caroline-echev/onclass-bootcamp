@@ -26,8 +26,9 @@ public class ControllerAdvisor {
     @ExceptionHandler(ElementAlreadyExistsException.class)
     public ResponseEntity<ExceptionCodeResponse> handleElementAlreadyExistsException() {
 
-        return ResponseEntity.badRequest().body(new ExceptionCodeResponse(Constants.ELEMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE,
-                HttpStatus.BAD_REQUEST.getReasonPhrase(), LocalDateTime.now(), HttpStatus.BAD_REQUEST.value()));
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionCodeResponse(Constants.ELEMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE,
+                HttpStatus.CONFLICT.getReasonPhrase(), LocalDateTime.now(), HttpStatus.CONFLICT.value()));
 
     }
 

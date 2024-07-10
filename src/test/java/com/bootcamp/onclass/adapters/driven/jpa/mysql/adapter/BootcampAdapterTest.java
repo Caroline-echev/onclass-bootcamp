@@ -1,7 +1,6 @@
 package com.bootcamp.onclass.adapters.driven.jpa.mysql.adapter;
 
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.BootcampEntity;
-import com.bootcamp.onclass.adapters.driven.jpa.mysql.entity.CapacityEntity;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.mapper.IBootcampEntityMapper;
 import com.bootcamp.onclass.adapters.driven.jpa.mysql.repository.IBootcampRepository;
 import com.bootcamp.onclass.data.BootcampData;
@@ -9,8 +8,6 @@ import com.bootcamp.onclass.data.ParametersData;
 import com.bootcamp.onclass.domain.exception.ElementAlreadyExistsException;
 import com.bootcamp.onclass.domain.exception.NoDataFoundException;
 import com.bootcamp.onclass.domain.model.Bootcamp;
-import com.bootcamp.onclass.domain.model.Capacity;
-import com.bootcamp.onclass.domain.model.Technology;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
